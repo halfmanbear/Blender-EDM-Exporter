@@ -341,3 +341,13 @@ def extract_transform_animation(parent: pyedm.Node, obj: Object, allowed_args=No
                                obj.name, anim_type, allowed_args=allowed_args)
 
     return a
+
+def get_float_property(animation_data, value, value_arg):
+    value_path: str = value.anim_path
+    is_animated: bool = value_path and has_path_anim(animation_data, value_path)
+    if is_animated and value_arg != -1:
+        arg: int = value_arg
+        key_value_list: KeyFramePoints = extract_anim_float(animation_data.action, value_path)
+        return pyedm.PropertyFloat(arg, key_value_list)
+    
+    return pyedm.PropertyFloat(value.value)

@@ -57,6 +57,8 @@ def copy_attrs(source, destination, attrs: List[str]) -> None:
             setattr(destination, attrib, type_helper(value))
 
 class SNode:
+    bl_idname = None
+
     def __init__(self, node: ShaderNode, attrs: List[str]) -> None:
         self.attrs = [
             "bl_idname",
@@ -78,8 +80,12 @@ class SNode:
         copy_attrs(node, self, self.attrs)
         self.input_defaults = [(x.name, type_helper(x.default_value)) for x in node.inputs if hasattr(x, 'default_value')]
 
-    def create(self, node_tree: NodeTree) -> Node:        
-        node = create_node_in_node_tree(self.bl_idname, node_tree)
+    def create(self, node_tree: NodeTree) -> Node:       
+        bl_idname = getattr(self, 'bl_idname', None) or getattr(self.__class__, 'bl_idname', None)
+        if not bl_idname:
+            raise AttributeError(f"No bl_idname defined for {self.__class__.__name__}") 
+     
+        node = create_node_in_node_tree(bl_idname, node_tree)
         
         copy_attrs(self, node, self.attrs)
 
@@ -100,22 +106,27 @@ class SNode:
         return node
     
 class SNodeMixRGB(SNode):
+    bl_idname = 'ShaderNodeMixRGB'
     def __init__(self, node: ShaderNode) -> None:
         super().__init__(node, ["blend_type", "use_alpha", "use_clamp"])
 
 class SNodeMix(SNode):
+    bl_idname = 'ShaderNodeMix'
     def __init__(self, node: ShaderNode) -> None:
         super().__init__(node, ["blend_type", "clamp_factor", "clamp_result", "data_type", "factor_mode"])
 
 class SNodeSeparateColor(SNode):
+    bl_idname = 'ShaderNodeSeparateColor'
     def __init__(self, node: ShaderNode) -> None:
         super().__init__(node, ["mode"])
 
 class SNodeSeparateRGB(SNode):
+    bl_idname = 'ShaderNodeSeparateRGB'
     def __init__(self, node: ShaderNode) -> None:
         super().__init__(node, [])
 
 class SNodeColorRamp(SNode):
+    bl_idname = 'ShaderNodeValToRGB'
     def __init__(self, node: ShaderNode) -> None:
         super().__init__(node, ["color_ramp"])
 
@@ -140,42 +151,52 @@ class SNodeColorRamp(SNode):
             setattr(destination, attrib, type_helper(value))
 
 class SNodeInvert(SNode):
+    bl_idname = 'ShaderNodeInvert'
     def __init__(self, node: ShaderNode) -> None:
         super().__init__(node, [])
 
 class SNodeCombineRGB(SNode):
+    bl_idname = 'ShaderNodeCombineRGB'
     def __init__(self, node: ShaderNode) -> None:
         super().__init__(node, [])
 
 class SNodeCombineColor(SNode):
+    bl_idname = 'ShaderNodeCombineColor'
     def __init__(self, node: ShaderNode) -> None:
         super().__init__(node, ["mode"])
 
 class SNodeNormalMap(SNode):
+    bl_idname = 'ShaderNodeNormalMap'
     def __init__(self, node: ShaderNode) -> None:
         super().__init__(node, ["space", "uv_map"])
 
 class SNodeBsdfPrincipled(SNode):
+    bl_idname = 'ShaderNodeBsdfPrincipled'
     def __init__(self, node: ShaderNode) -> None:
         super().__init__(node, ["distribution", "subsurface_method"])
 
 class SNodeGroupInput(SNode):
+    bl_idname = 'NodeGroupInput'
     def __init__(self, node: ShaderNode) -> None:
         super().__init__(node, [])
 
 class SNodeGroupOutput(SNode):
+    bl_idname = 'NodeGroupOutput'
     def __init__(self, node: ShaderNode) -> None:
         super().__init__(node, [])
 
 class SNodeReroute(SNode):
+    bl_idname = 'NodeReroute'
     def __init__(self, node: ShaderNode) -> None:
         super().__init__(node, [])
 
 class SShaderNode(SNode):
+    bl_idname = 'ShaderNode'
     def __init__(self, node: ShaderNode) -> None:
         super().__init__(node, [])
 
 class SShaderNodeMath(SNode):
+    bl_idname = 'ShaderNodeMath'
     def __init__(self, node: ShaderNode) -> None:
         super().__init__(node, ['operation', 'use_clamp'])
 

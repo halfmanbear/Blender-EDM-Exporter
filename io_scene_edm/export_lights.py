@@ -59,13 +59,17 @@ def get_light_output(light: Light) -> Union[ShaderNodeOutputLight, None]:
             return bpy_node
     return None
 
+def _rgb(color) -> Tuple[float, float, float]:
+    # Node socket colours are RGBA; the native PropertyFloat3 accepts only RGB (alpha is dropped, not premultiplied).
+    return tuple(type_helper(color)[:3])
+
 def gather_color(blender_lamp: Light) -> Tuple[float]:
     bpy_node: Node = get_light_output(blender_lamp)
     emission_node = get_cycles_emission_node(bpy_node)
     if emission_node is not None:
-        return type_helper(emission_node.inputs[NodeSocketInEmissiveEnum.COLOR].default_value)
+        return _rgb(emission_node.inputs[NodeSocketInEmissiveEnum.COLOR].default_value)
 
-    return type_helper(blender_lamp.color)
+    return _rgb(blender_lamp.color)
 
 def get_falloff_node(bpy_node: Node) -> Union[ShaderNodeEmission, None]:
     if not bpy_node:

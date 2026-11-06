@@ -625,6 +625,12 @@ class PBRNode(IRenderNode):
 	def addTransparentPivot(self, *args, **kwargs):
 		pass
 
+	def setOpacityFresnelPower(self, *args, **kwargs):
+		pass
+
+	def setOpacityFresnelFactor(self, *args, **kwargs):
+		pass
+
 class GlassNode(PBRNode):
 	def __init__(self, *args, **kwargs):
 		pass

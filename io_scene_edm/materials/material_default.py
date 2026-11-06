@@ -1,5 +1,5 @@
 import copy
-from typing import List, Dict, Callable
+from typing import List, Dict
 
 from bpy.types import (
     Material,
@@ -9,7 +9,6 @@ from bpy.types import (
 import utils
 import animation as anim
 from logger import log
-from mesh_storage import MeshStorage
 from pyedm_platform_selector import pyedm
 from objects_custom_props import get_edm_props
 from socket_types import SInput
@@ -82,6 +81,8 @@ class DefaultMaterial(IMaterial):
             self.shadow_caster      = ValueDeskDropDown(node_group, NodeSocketInDefaultEnum.SHADOW_CASTER, BpyNodeSocketType.SHADOWCASTER, 'SHADOW_CASTER_YES')
             self.version            = ValueDesk(node_group, NodeSocketCommonEnum.VERSION, BpyNodeSocketType.INTEGER, -1)
             self.opacity_value      = ValueDesk(node_group, NodeSocketInDefaultEnum.OPACITY_VALUE, BpyNodeSocketType.FLOAT, 1.0)
+            self.opacity_fresnel_factor      = ValueDesk(node_group, NodeSocketInDefaultEnum.OPACITY_FRESNEL_FACTOR, BpyNodeSocketType.FLOAT, -1.0)
+            self.opacity_fresnel_power      = ValueDesk(node_group, NodeSocketInDefaultEnum.OPACITY_FRESNEL_POWER, BpyNodeSocketType.FLOAT, -1.0)
 
     #TODO-270: copypasta in every material
     def __init__(self, bpy_material: Material, node_group: ShaderNodeGroup):
@@ -138,17 +139,10 @@ class DefaultMaterial(IMaterial):
         shadow_caster_type: int = get_shadow_caster_value(self.values.shadow_caster.value)
         edm_render_node.setShadowCaster(shadow_caster_type)
 
-        opacity_value_path: str = self.values.opacity_value.anim_path
-        is_color_value_animated: bool = opacity_value_path and anim.has_path_anim(self.bpy_material.node_tree.animation_data, opacity_value_path)
-        if is_color_value_animated and edm_props.OPACITY_VALUE_ARG != -1:
-            arg_opacity_value_n: int = edm_props.OPACITY_VALUE_ARG
-            key_opacity_value_list: anim.KeyFramePoints = anim.extract_anim_float(self.bpy_material.node_tree.animation_data.action, opacity_value_path)
-            opacity_value_prop = pyedm.PropertyFloat(arg_opacity_value_n, key_opacity_value_list)
-            edm_render_node.setOpacityValue(opacity_value_prop)
-        else:
-            opacity_value_prop = pyedm.PropertyFloat(self.values.opacity_value.value)
-            edm_render_node.setOpacityValue(opacity_value_prop)
-
+        edm_render_node.setOpacityFresnelPower(anim.get_float_property(self.bpy_material.node_tree.animation_data, self.values.opacity_fresnel_power, edm_props.OPACITY_FRESNEL_POWER_ARG))
+        edm_render_node.setOpacityFresnelFactor(anim.get_float_property(self.bpy_material.node_tree.animation_data, self.values.opacity_fresnel_factor, edm_props.OPACITY_FRESNEL_FACTOR_ARG))
+        edm_render_node.setOpacityValue(anim.get_float_property(self.bpy_material.node_tree.animation_data, self.values.opacity_value, edm_props.OPACITY_VALUE_ARG))
+        
         two_sided: bool = edm_props.TWO_SIDED
         edm_render_node.setTwoSided(two_sided)
 

@@ -8,7 +8,7 @@ from typing import List
 from dataclasses import dataclass
 from logger import log
 from bpy.types import Object, bpy_prop_array, ShaderNodeGroup, ShaderNodeCustomGroup
-from typing import List, Union, Tuple, Union, Sequence, Callable, Dict
+from typing import List, Tuple, Dict
 from bpy.types import Node
 
 def make_socket_map(node_group: ShaderNodeGroup) -> Dict[str, Dict[str, str]]:

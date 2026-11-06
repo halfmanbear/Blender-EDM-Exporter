@@ -234,6 +234,17 @@ class EDMPropsGroup(PropertyGroup):
         default = -1
     )
 
+    OPACITY_FRESNEL_FACTOR_ARG : IntProperty(
+        name = 'Opacity fresnel factor arg',
+        min = -1,
+        default = -1
+    )
+
+    OPACITY_FRESNEL_POWER_ARG : IntProperty(
+        name = 'Opacity fresnel power arg',
+        min = -1,
+        default = -1
+    )
 def get_edm_props(o: Object) -> EDMPropsGroup:
     return o.EDMProps
 

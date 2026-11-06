@@ -41,3 +41,6 @@ Release 23.12.2025
 
 Release 29.01.2026
 * Fix the bug with bones: texture distortions after exporting.
+
+Release 07.08.2026
+* Fixed fake lights being invisible in scenes with no opaque/transparent geometry.

@@ -43,7 +43,7 @@ from . import utils
 bl_info = {
     'name': 'EDM 10.0 format', # 'EDM 10.0 format'
     'author': 'Eagle Dynamics (c) 2024 - present',
-    "version": (1, 0, "265728"),
+    "version": (1, 0, "266743"),
     'blender': (3, 5, 0),
     'location': 'File > Export / Shader Editor > Add > EDM',
     'description': 'Export as EDM and compatible shading materials',
@@ -319,6 +319,11 @@ class UnknownChildPanel(bpy.types.Panel):
 
             row = layout.row()
             row.prop(props, "OPACITY_VALUE_ARG")
+
+            row = layout.row()
+            row.prop(props, "OPACITY_FRESNEL_FACTOR_ARG")
+            row = layout.row()
+            row.prop(props, "OPACITY_FRESNEL_POWER_ARG")
 
             row = layout.row()
             row.prop(props, "AO_ARG")
