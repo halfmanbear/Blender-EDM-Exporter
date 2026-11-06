@@ -22,6 +22,7 @@ Blender plugin for exporting 3D models into the EDM format used in DCS World. En
 > - **4.2.x LTS**
 > - **4.5.x LTS**
 > - **5.1.x LTS**
+> - **5.2.x LTS**
 
 ---
 
