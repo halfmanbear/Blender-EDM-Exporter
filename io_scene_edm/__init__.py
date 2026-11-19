@@ -6,7 +6,9 @@ import traceback
 
 from typing import List, Dict, Tuple, Set
 
-sys.path.append(bpy.utils.user_resource(resource_type='SCRIPTS', path="addons") + '\\' + __name__)
+addon_dir = os.path.dirname(os.path.abspath(__file__))
+if addon_dir not in sys.path:
+    sys.path.append(addon_dir)
 
 from pyedm_platform_selector import pyedm, native_bindings
 

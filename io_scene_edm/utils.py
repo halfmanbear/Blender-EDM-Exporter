@@ -87,9 +87,9 @@ arg_re_c = re.compile(r'^(\d+)(_.+)?')
 last_braces_re_c = re.compile(r'.*\[(\d+)\]$')
 
 class EDMPath:
-    scripts_path: str = bpy.utils.user_resource(resource_type='SCRIPTS', path="addons")
-    plugin_name: str = 'io_scene_edm'
-    full_plugin_path: str = os.path.join(scripts_path, plugin_name)
+    full_plugin_path: str = os.path.dirname(os.path.abspath(__file__))
+    scripts_path: str = os.path.dirname(full_plugin_path)
+    plugin_name: str = os.path.basename(full_plugin_path)
 
 def get_is_dev_env() -> bool:
     return False
