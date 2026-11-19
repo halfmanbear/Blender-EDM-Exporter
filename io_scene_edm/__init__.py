@@ -45,7 +45,7 @@ from . import utils
 bl_info = {
     'name': 'EDM 10.0 format', # 'EDM 10.0 format'
     'author': 'Eagle Dynamics (c) 2024 - present',
-    "version": (1, 0, "266743"),
+    "version": (1, 0, "269672"),
     'blender': (3, 5, 0),
     'location': 'File > Export / Shader Editor > Add > EDM',
     'description': 'Export as EDM and compatible shading materials',
